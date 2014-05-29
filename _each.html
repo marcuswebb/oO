@@ -67,8 +67,12 @@ a:visited
 // var oO = {};
 
 var oO = function(str,fn) {
-	console.log(str);
-	return oO.every(oO.select(str),fn,str);
+	// console.log(str);
+	if (typeof fn === 'function') {
+		return oO.every(oO.select(str),fn,str);
+	} else {
+		return oO.every(oO.select(str));
+	}
 }
 
 oO.select = function(str) {
@@ -223,10 +227,12 @@ oO.select = function(str) {
 
 oO.every = function(obj, fn, str) {
 
-	// console.log(obj);
+	console.log(obj);
 	console.time('each: ' + str);
 
-	if (typeof obj != 'undefined') {
+	if (typeof fn != 'function') {
+		return obj;
+	} else if (typeof obj != 'undefined') {
 		if (obj.length && typeof obj[0] != null && typeof obj != 'undefined') {
 			for (var i = 0, ol = obj.length, v = obj[i]; i < ol; i++) {
 				if (typeof obj[i] != 'undefined' && obj[i] != null) {
@@ -268,7 +274,7 @@ oO.every = function(obj, fn, str) {
 
 
 function doStuff(obj, index) {
-	console.log(obj);
+	// console.log(obj);
 	if (typeof obj == 'object' && obj.length != 0) {
 		obj.style.color = 'orange';
 	} else {
@@ -308,16 +314,18 @@ function runDemo(target) {
 
 
 function playDemo() {
-	
+
 	// console.log($('*').length);
+	console.log(oO('p'));
 	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
-	// console.log($('*').length);
+	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
+	console.log($('*').length);
 	// oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)',doStuff);
 	// oO('a',doOtherStuff);
 	// oO('#boo, #urns, a|not(.foo, .inc, .dba), #blargh', doOtherStuff);
 	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(#blargh, .ugh)', doOtherStuff);
 	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(p|eq(3))', doOtherStuff); // BROKEN
-	oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy, .abc, .bcd, .cde, .def, .efg, .fgh, .ghi, .hij, .ijk, .jkl, .klm, .lmn, .mno, .nop, .opq, .pqr, .qrs)', doOtherStuff);
+	// oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy, .abc, .bcd, .cde, .def, .efg, .fgh, .ghi, .hij, .ijk, .jkl, .klm, .lmn, .mno, .nop, .opq, .pqr, .qrs)', doOtherStuff);
 
 	// runDemo('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy, .abc, .bcd, .cde, .def, .efg, .fgh, .ghi, .hij, .ijk, .jkl, .klm, .lmn, .mno, .nop, .opq, .pqr, .qrs)');
 	// runDemo('a:first-of-type');

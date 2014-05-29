@@ -41,8 +41,12 @@ a:visited
 	<a href="blah">a:first-of-type:link</a>
 	<a>a</a>
 	<a href="blah">a:link</a>
-	<a href="blah" class="bar">a:link.bar</a>
 	<a href="blah" class="foo">a:link.foo</a>
+	<a href="blah" class="xyz">a:link.xyz</a>
+	<a href="blah" class="zyx">a:link.zyx</a>
+	<a href="blah" class="inc">a:link.inc</a>
+	<a href="blah" class="dba">a:link.dba</a>
+	<a href="blah" id="bar">a:link#bar</a>
 	<a>a</a>
 	<a>a</a>
 	<a href="blah">a:link:last-child</a>
@@ -56,18 +60,22 @@ a:visited
 // var oO = {};
 
 var oO = function(str,fn) {
+	// this.string = str;
+	// this.callback = fn;
+	// console.log(this.string);
+	// console.log(this.callback);
 	return oO.every(oO.select(str),fn,str);
 }
 
 oO.select = function(str) {
 
 	str = str.replace(/ /g,'');
-	console.log(str);
+	// console.log(str);
 	var m = str;
 	var re = /,(?![^\(]*\))/g; 
 	var regMatch = re.exec(m);
 
-	var comment = '';
+	var comment = 'comment: ';
 
 	// verify str is not a comma separated list of selectors
 	// if (str.indexOf(',') < 0) { 
@@ -76,9 +84,9 @@ oO.select = function(str) {
 	
 	if (str.indexOf(',') > -1 && regMatch != null) { 
 
-		console.log(regMatch);
+		// console.log(regMatch);
 
-		comment = 'str contains commas but does not contain commas within parentheses';
+		comment += 'str contains commas but does not contain commas within parentheses';
 		console.log(comment);
 
 		// iterate through a comma separated list of selectors & return each array item recursively to the function 
@@ -133,19 +141,21 @@ oO.select = function(str) {
 			return arr;
 		} 
 	// } else if (str.indexOf(',') > -1 && regMatch == null) { 
-	} else if (str.indexOf(',') > -1 && str.indexOf('|')) { 
-		comment = 'str contains commas & a method';
-		console.log(comment);
+	} else if (str.indexOf(',') > -1 && str.indexOf('|') > -1) { 
+		console.log("if (str.indexOf(',') > -1 && str.indexOf('|') > -1)")
+		// comment += 'str contains commas & a method. ';
+		// console.log(comment);
 		var arr = [];
 		var elem = str.substr(0,str.indexOf('|'));
-		var filterSelectors = str.substr(str.indexOf('(') + 1, str.indexOf(')') - str.indexOf('(') - 1).split(',');
-		var method = str.substr(str.indexOf('|') + 1,str.indexOf('(') - str.indexOf('|') - 1);
-		// console.log(elem);
-		for (var iiii = 0; iiii < filterSelectors.length; iiii++) {
-			arr[iiii] = elem + '|' + method + '(' + filterSelectors[iiii] + ')';
-			// arr.push(elem);
-			// arr[i] = elem + '|' + method + '(' + filterSelectors[i] + ')';
-		}
+		// var method = str.substr(str.indexOf('|') + 1,str.indexOf('(') - str.indexOf('|') - 1);
+		// var filterSelectors = str.substr(str.indexOf('(') + 1, str.indexOf(')') - str.indexOf('(') - 1).split(',');
+		// // console.log(elem);
+		// for (var iiii = 0; iiii < filterSelectors.length; iiii++) {
+		// 	arr[iiii] = elem + '|' + method + '(' + filterSelectors[iiii] + ')';
+		// 	// arr.push(elem);
+		// 	// arr[i] = elem + '|' + method + '(' + filterSelectors[i] + ')';
+		// }
+		// console.log(filterSelectors);
 
 		// console.log(arr.join());
 		// for (var iiiii = 0; iiiii < arr.length; iiiii++) {
@@ -158,11 +168,12 @@ oO.select = function(str) {
 	} else if (str.indexOf(',') < 0) { 
 		return result(str);
 	} else {
-		comment = 'out of pattern';
+		comment += 'out of pattern';
 		console.log(comment);
 	}
 	function result(str) {
 		if (str.indexOf('|') > -1) {
+			console.log(str);
 			// if (str.indexOf('')))
 			var method = str.substr(str.indexOf('|') + 1,str.indexOf('(') - str.indexOf('|') - 1);
 			// console.log(method);
@@ -178,44 +189,90 @@ oO.select = function(str) {
 					return new Array().push(document.querySelectorAll(str)[index]);
 				break;
 				case 'not':
-					var filter = str.substr(str.indexOf('(') + 1, str.indexOf(')') - str.indexOf('(') - 1);
-					// console.log(filter);
-					str = str.substr(0,str.indexOf('|'));
-					var objs = document.querySelectorAll(str);
+					var filterArray = [];
+					// var method = str.substr(str.indexOf('|') + 1,str.indexOf('(') - str.indexOf('|') - 1);
+					var filterSelectors = str.substr(str.indexOf('(') + 1, str.indexOf(')') - str.indexOf('(') - 1).split(',');
+					console.log(filterSelectors);
+					// for (var iiii = 0; iiii < filterSelectors.length; iiii++) {
+						// filterArray[iiii] = elem + '|' + method + '(' + filterSelectors[iiii] + ')';
+						// arr.push(elem);
+						// arr[i] = elem + '|' + method + '(' + filterSelectors[i] + ')';
+					// }
 
-					if (filter.indexOf(',') > -1) {
-						console.log('multiple filter selectors');
-					} else {
-						console.log('single filter');
-					}
-					// change filter functionality to be array based instead of a string 
+						// var filter = str.substr(str.indexOf('(') + 1, str.indexOf(')') - str.indexOf('(') - 1);
+						
+						// console.log(filter);
+						elem = str.substr(0,str.indexOf('|'));
+						console.log(elem);
+						var objs = document.querySelectorAll(elem);
 
-					// presuming single filter 
-					var filterType = filter.substr(0,1);
-					if (filterType == '.' || filterType == '#') {
-						filter = filter.substr(1);
-					}
-					var arr = [];
-					for (var i = 0; i < objs.length; i++) {
-						switch(filterType) {
-							case '.':
-								if (objs[i].className.indexOf(filter) > -1) {
-									objs[i] = '';
-								} else {
-									arr.push(objs[i]);
-								}
-							break;
-							case '#':
-								if (objs[i].id.indexOf(filter) > -1) {
-									objs[i] = '';
-								} else {
-									arr.push(objs[i]);
-								}
-							break;
-							default:
-							break;
+						
+						// change filter functionality to be array based instead of a string 
+
+						var arr = [];
+						var zap = [];
+						for (var i = 0; i < objs.length; i++) {
+							arr.push(objs[i]);
 						}
+						console.log(arr);
+						for (var i = 0; i < arr.length; i++) {
+							// console.log(filterSelectors);
+							console.log('filter new elem in arr');
+							for (var iiii = 0; iiii < filterSelectors.length; iiii++) {
+								// var iiii = 0;
+								var filter = filterSelectors[iiii];
+								// console.log(filterSelectors)
+								// if (filter.indexOf(',') > -1) {
+								// 	comment += 'multiple filter selectors';
+								// 	console.log(comment);
+								// } else {
+								// 	comment += 'single filter';
+								// 	console.log(comment);
+								// }
+								// presuming single filter 
+								var filterType = filter.substr(0,1);
+								// if (filterType == '.' || filterType == '#') {
+								// 	filter = filter.substr(1);
+								// }
+								console.log(filter);
+								switch(filterType) {
+									case '.':
+										filterText = filter.substr(1);
+										if (objs[i].className.indexOf(filterText) > -1) {
+											// objs[i] = '';
+											console.log('zap: class: ' + i);
+											// arr.splice(i,1);
+											zap.push(i);
+										} else {
+											// arr.push(objs[i]);
+										}
+									break;
+									case '#':
+										filterText = filter.substr(1);
+										if (objs[i].id.indexOf(filterText) > -1) {
+											// objs[i] = '';
+											console.log('zap: id: ' + i);
+											// arr.splice(i,1);
+											zap.push(i);
+										} else {
+											console.log('no zap');
+											// arr.push(objs[i]);
+										}
+									break;
+									default:
+									break;
+								}
+
+							} 
+
+						}
+
+					console.log(arr);
+					for (var i = 0; i < zap.length; i++) {
+						// console.log(arr[i]);
+						arr.splice(zap[i - i],1);
 					}
+					console.log(arr);
 					return arr;
 				break;
 
@@ -319,12 +376,13 @@ function runDemo(target) {
 
 
 function playDemo() {
+	oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba)',doStuff);
 
 	// runDemo('a:first-of-type');
 	// runDemo('a:link:last-child');
 	// runDemo('p|eq(4)');
 	// runDemo('p:last-child');
-	runDemo('a|not(.foo, #bar)');
+	// runDemo('a|not(.foo, #bar)');
 	// runDemo('p, #boo, #urns, a|not(.foo, #bar), #blargh');
 	// runDemo('p|not(#blargh)');
 	// runDemo('#blargh');

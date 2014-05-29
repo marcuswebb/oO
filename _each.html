@@ -62,8 +62,7 @@ a:visited
 // var oO = {};
 
 var oO = function(str,fn) {
-	// this.string = str;
-	// this.callback = fn;
+	console.log(str);
 	return oO.every(oO.select(str),fn,str);
 }
 
@@ -164,6 +163,7 @@ oO.select = function(str) {
 
 					var arr = [];
 					var zap = [];
+					var zapped = 0;
 					for (var i = 0; i < objs.length; i++) {
 						arr.push(objs[i]);
 					}
@@ -175,13 +175,15 @@ oO.select = function(str) {
 								case '.':
 									filterText = filter.substr(1);
 									if (objs[i].className.indexOf(filterText) > -1) {
-										zap.push(i);
+										arr.splice(i - zapped,1);
+										zapped++;
 									}
 								break;
 								case '#':
 									filterText = filter.substr(1);
 									if (objs[i].id.indexOf(filterText) > -1) {
-										zap.push(i);
+										arr.splice(i - zapped,1);
+										zapped++;
 									}
 								break;
 								default:
@@ -190,10 +192,6 @@ oO.select = function(str) {
 
 						} 
 
-					}
-
-					for (var i = 0; i < zap.length; i++) {
-						arr.splice(zap[i - i],1);
 					}
 					return arr;
 				break;
@@ -307,27 +305,29 @@ function runDemo(target) {
 function playDemo() {
 	// oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)',doStuff);
 	// oO('a',doOtherStuff);
+	oO('#boo, #urns, a|not(.foo, .inc, .dba), #blargh', doOtherStuff);
+	// oO('a|not(.foo, .inc, .dba)', doOtherStuff);
 
-	runDemo('a:first-of-type');
-	runDemo('a:link:last-child');
-	runDemo('p|eq(4)');
-	runDemo('p:last-child');
-	runDemo('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)');
-	runDemo('p, a');
-	runDemo('p, #boo, #urns, a|not(.foo, #bar), #blargh');
-	runDemo('p|not(#blargh)');
-	runDemo('#blargh');
-	runDemo('p');
-	runDemo('p:nth-of-type(2n)');
-	runDemo('a');
-	runDemo('a:link');
-	runDemo('a:link, p');
-	runDemo('#blargh, .ugh');
-	runDemo('#blargh');
-	runDemo('.ugh');
-	runDemo('#buh');
-	runDemo('h1');
-	runDemo('*');
+	// runDemo('a:first-of-type');
+	// runDemo('a:link:last-child');
+	// runDemo('p|eq(4)');
+	// runDemo('p:last-child');
+	// runDemo('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)');
+	// runDemo('p, a');
+	// runDemo('p, #boo, #urns, a|not(.foo, #bar), #blargh');
+	// runDemo('p|not(#blargh)');
+	// runDemo('#blargh');
+	// runDemo('p');
+	// runDemo('p:nth-of-type(2n)');
+	// runDemo('a');
+	// runDemo('a:link');
+	// runDemo('a:link, p');
+	// runDemo('#blargh, .ugh');
+	// runDemo('#blargh');
+	// runDemo('.ugh');
+	// runDemo('#buh');
+	// runDemo('h1');
+	// runDemo('*');
 
 	// console.time('jquery');
 	// $('*').each(function() {

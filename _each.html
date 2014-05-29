@@ -4,8 +4,12 @@
 	<meta name="viewport" content="user-scalable=no, initial-scale=1, width=device-width">
 	<link rel="stylesheet" type="text/css" href="">
 	<style type="text/css">
-
 body > div 
+	{
+		float: left;
+		width: 50%;
+	}
+body div 
 	{
 		border-bottom: 1px solid #ccc;
 	}
@@ -27,7 +31,7 @@ a:visited
 	</style>
 </head>
 <body>
-
+<div id="oO">
 <div>
 	<p id="blargh">p#blargh</p>
 	<p class="ugh">p.ugh</p>
@@ -37,7 +41,7 @@ a:visited
 	<p class="ugh">p.ugh</p>
 </div>
 <div>
-	<p>p:first-child</a>
+	<p>p:first-child</p>
 	<a href="blah">a:first-of-type:link</a>
 	<a>a</a>
 	<a href="blah">a:link</a>
@@ -52,6 +56,7 @@ a:visited
 	<a>a</a>
 	<a>a</a>
 	<a href="blah">a:link:last-child</a>
+</div>
 </div>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
 	<script type="text/javascript">
@@ -167,6 +172,7 @@ oO.select = function(str) {
 					for (var i = 0; i < objs.length; i++) {
 						arr.push(objs[i]);
 					}
+					// 2DO verify that arr.length - 1 is correct vs. arr.length
 					for (var i = arr.length - 1; i--;) {
 						for (var iiii = 0; iiii < filterSelectors.length; iiii++) {
 							var filter = filterSelectors[iiii];
@@ -262,6 +268,7 @@ oO.every = function(obj, fn, str) {
 
 
 function doStuff(obj, index) {
+	console.log(obj);
 	if (typeof obj == 'object' && obj.length != 0) {
 		obj.style.color = 'orange';
 	} else {
@@ -301,12 +308,18 @@ function runDemo(target) {
 
 
 function playDemo() {
+	
+	// console.log($('*').length);
+	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
+	// console.log($('*').length);
 	// oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)',doStuff);
 	// oO('a',doOtherStuff);
 	// oO('#boo, #urns, a|not(.foo, .inc, .dba), #blargh', doOtherStuff);
-	oO('a|not(.foo, .inc, .dba, #xxx), p|not(#blargh, .ugh)', doOtherStuff);
+	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(#blargh, .ugh)', doOtherStuff);
 	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(p|eq(3))', doOtherStuff); // BROKEN
+	oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy, .abc, .bcd, .cde, .def, .efg, .fgh, .ghi, .hij, .ijk, .jkl, .klm, .lmn, .mno, .nop, .opq, .pqr, .qrs)', doOtherStuff);
 
+	// runDemo('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy, .abc, .bcd, .cde, .def, .efg, .fgh, .ghi, .hij, .ijk, .jkl, .klm, .lmn, .mno, .nop, .opq, .pqr, .qrs)');
 	// runDemo('a:first-of-type');
 	// runDemo('a:link:last-child');
 	// runDemo('p|eq(4)');

@@ -60,17 +60,11 @@ a:visited
 </div>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
 	<script type="text/javascript">
-// var app = {};
-// app.times = {};
-// app.times.start = Date.now();
-// app.times.end = 0;
-// var oO = {};
 
-var oO = function(str,fn,settings) {
-	// console.log(str);
+var oO = function(str, fn, settings) {
 	if (typeof settings === 'undefined') {
 		var settings = {};
-	}
+	};
 	settings.string = str;
 	console.time('oO: ' + settings.string);
 	if (typeof fn === 'function') {
@@ -79,8 +73,8 @@ var oO = function(str,fn,settings) {
 	} else {
 		console.timeEnd('oO: ' + settings.string);
 		return oO.every(oO.select(str));
-	}
-}
+	};
+};
 
 oO.select = function(str) {
 
@@ -89,25 +83,15 @@ oO.select = function(str) {
 	var re = /,(?![^\(]*\))/g; 
 	var regMatch = re.exec(m);
 
-	var comment = 'comment: ';
-
 	// verify str is not a comma separated list of selectors
-	// if (str.indexOf(',') < 0) { 
-	// 	return result(str);
-	// } else if (regMatch == null) { 
-	
 	if (str.indexOf(',') > -1 && typeof regMatch != 'object') { 
-
 		// iterate through a comma separated list of selectors & return each array item recursively to the function 
 		var arr = str.split(',');
 		for (var i = 0; i < arr.length; i++) {
 			arr[i] = oO.select(arr[i]);
-		}
-
+		};
 		return arr;
-
 	} else if (regMatch != null) { 
-
 		function regThis() {
 			if (regMatch != null) {
 				var item = m.substr(0,regMatch.index);
@@ -121,17 +105,14 @@ oO.select = function(str) {
 					arr[iii] = m;
 					for (var i = 0; i < arr.length; i++) {
 						if (typeof oO.select(arr[i]) != 'undefined') {
-							// arr[i] = oO.select(arr[i]);
 							arr[i] = result(arr[i]);
 						} else {
 							arr[i] = null;
-						}
-					}
-					// return arr;
-				}
-			}
-		}
-
+						};
+					};
+				};
+			};
+		};
 		if (regMatch != null) {
 			var arr = [];
 			var iii = 0;
@@ -139,14 +120,12 @@ oO.select = function(str) {
 			return arr;
 		} else {	
 			// iterate through a comma separated list of selectors & return each array item recursively to the function 
-			// str = str.replace(/ /g,'');
 			var arr = str.split(',');
 			for (var i = 0; i < arr.length; i++) {
 				arr[i] = oO.select(arr[i]);
-			}
+			};
 			return arr;
-		} 
-	// } else if (str.indexOf(',') > -1 && regMatch == null) { 
+		}; 
 	} else if (str.indexOf(',') > -1 && str.indexOf('|') > -1) { 
 		var arr = [];
 		var elem = str.substr(0,str.indexOf('|'));
@@ -154,9 +133,8 @@ oO.select = function(str) {
 	} else if (str.indexOf(',') < 0) { 
 		return result(str);
 	} else {
-		comment += 'out of pattern';
-		console.log(comment);
-	}
+		console.log('out of pattern');
+	};
 	function result(str) {
 		if (str.indexOf('|') > -1) {
 			var method = str.substr(str.indexOf('|') + 1,str.indexOf('(') - str.indexOf('|') - 1);
@@ -172,19 +150,17 @@ oO.select = function(str) {
 					return new Array().push(document.querySelectorAll(str)[index]);
 				break;
 				case 'not':
-					var filterArray = [];
 					var filterSelectors = str.substr(str.indexOf('(') + 1, str.indexOf(')') - str.indexOf('(') - 1).split(',');
 					var elem = str.substr(0,str.indexOf('|'));
 					var objs = document.querySelectorAll(elem);
 
+					// 2DO : try to remove arr from flow, seems extraneous
 					var arr = [];
-					var zap = [];
-					var zapped = 0;
 					for (var i = 0; i < objs.length; i++) {
 						arr.push(objs[i]);
-					}
+					};
 					// 2DO verify that arr.length - 1 is correct vs. arr.length
-					for (var i = arr.length - 1; i--;) {
+					for (var i = arr.length; i--;) {
 						for (var iiii = 0; iiii < filterSelectors.length; iiii++) {
 							var filter = filterSelectors[iiii];
 							var filterType = filter.substr(0,1);
@@ -193,25 +169,22 @@ oO.select = function(str) {
 									filterText = filter.substr(1);
 									if (objs[i].className.indexOf(filterText) > -1) {
 										arr.splice(i,1);
-									}
+									};
 								break;
 								case '#':
 									filterText = filter.substr(1);
 									if (objs[i].id.indexOf(filterText) > -1) {
 										arr.splice(i,1);
-									}
+									};
 								break;
 								default:
 								break;
-							}
-
-						} 
-
-					}
+							};
+						};
+					};
 					return arr;
 				break;
-
-			}
+			};
 		} else {
 			if (document.querySelectorAll(str).length > 0) {
 				return document.querySelectorAll(str);
@@ -219,6 +192,9 @@ oO.select = function(str) {
 				return undefined;
 			};
 		};
+
+		// The following is deprecated as querySelectorAll(str) is sufficiently well supported
+		// 
 		// if (str.substr(0,1) === '#') {
 		// 	return new Array(document.getElementById(str.substr(1)));
 		// } else if (str.substr(0,1) === '.') {
@@ -228,6 +204,7 @@ oO.select = function(str) {
 		// } else {
 		// 	return document.getElementsByTagName(str);
 		// }
+
 	};
 	// NO ERROR HANDLING IF NO MATCHING ELEMENTS FOUND
 };
@@ -240,11 +217,11 @@ oO.every = function(obj, fn, settings) {
 		if (Array.isArray(obj) === false) {
 			if (obj.length === 1) {
 				obj = obj[0];
-			}
+			};
 			var arr = [];
 			arr.push(obj);			
 			obj = arr;
-		}
+		};
 		return obj;
 	} else if (typeof obj != 'undefined') {
 		if (obj.length && typeof obj[0] != null && typeof obj != 'undefined') {
@@ -253,31 +230,22 @@ oO.every = function(obj, fn, settings) {
 
 					if (obj[i].length) {
 						// iterate through an array of selectors
-						oO.every(obj[i],fn,settings);
+						oO.every(obj[i], fn, settings);
 					} else {
 						// execute the callback function for single selector
-						fn(obj[i], i,settings);
-					} 
+						fn(obj[i], i, settings);
+					};
 
-				}
+				};
 			};	
 		} else if (obj.length === 0 && typeof obj[0] != null && typeof obj != 'undefined') {
-			fn(obj,0,settings);
-		// } else if (typeof obj[0] != null) {
-		// 	console.log(obj);
-			// for (var p in obj) {
-			// 	// console.log(p);
-			// 	if (fn(obj[p], p) === false) {
-			// 		console.log(p);
-			// 		break;
-			// 	}
-			// }
+			fn(obj, 0, settings);
 		} else {
-			fn(obj,0,settings);
-		}
-	} else {
+			fn(obj, 0, settings);
+		};
+	// } else {
 		// console.log('array empty');
-	}
+	};
 	console.timeEnd('every: ' + settings.string);
 
 	// if (obj.length) for (var i = 0, ol = obj.length, v = obj[0]; i < ol && fn(v, i) !== false; v = obj[++i]);
@@ -287,31 +255,27 @@ oO.every = function(obj, fn, settings) {
 };
 
 
+// ---------------------------------------------------------------------
+
+
 function doStuff(obj, index, settings) {
-	// console.log(obj);
 	if (typeof obj == 'object' && obj.length != 0) {
 		obj.style.color = 'orange';
-	} else {
-		console.log('no obj');
-	}
+	};
 }
 function doOtherStuff(obj, index, settings) {
 	if (typeof obj == 'object' && obj.length != 0) {
 		obj.style.color = 'blue';
-	} else {
-		console.log('no obj');
-	}
-}
+	};
+};
 
 function undoStuff(obj, index, settings) {
 	obj.style.color = '';	
-}
+};
 
 function doColor(obj, index, settings) {
-	// console.log(obj);
-	newColor = settings.color;
-	obj.style.color = newColor;
-}
+	obj.style.color = settings.color;
+};
 
 // ---------------------------------------------------------------------
 
@@ -329,7 +293,7 @@ function runDemo(target) {
 	}, currentTime);
 	currentTime += timing;
 
-}
+};
 
 
 function playDemo() {
@@ -348,27 +312,26 @@ function playDemo() {
 	// var ddd = oO('#blargh');
 	// ddd[0].style.color = 'green';
 
+
 // Elements previously assigned to variable can still be accessed if they are removed from the DOM after assignment. 
 
 
 	// var fff = oO('a');
 	// oO.every(fff, doOtherStuff);
-	var newParams = {};
-	newParams.color = 'gray';
-	oO('a', doColor, newParams);
+	// var newParams = {};
+	// newParams.color = 'gray';
+	// oO('a', doColor, newParams);
 	// oO.every(fff, doColor, newParams);
+	// fff[0].style.color = 'purple'; // this throws a typeError 
 
-	// fff[0].style.color = 'purple'; // this throws a typeError
 
 // Interestingly the timing here affects whether or not the style property is modifying on the previously called element variable. 
 // At lower or no delay, the element either will not receive or receive & then lose the modification. 
 // At longer delays, the element will retain the change.
 
 	// var bbb = oO('p|eq(2)');
-
 	// var eee = oO('body');
 	// eee[0].innerHTML = 'ELEMENTS DELETED';
-
 	// bbb[0].style.color = 'lime';
 	// setTimeout(function() {
 		// eee[0].innerHTML = bbb[0].outerHTML;	
@@ -376,10 +339,10 @@ function playDemo() {
 
 
 	// console.log($('*').length);
-	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
+	// var bodyContent = $('body').html();
+	// $('body').append(bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent + bodyContent);
 	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
 	// console.log($('*').length);
-
 
 
 	// oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)',doStuff);
@@ -388,6 +351,7 @@ function playDemo() {
 	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(#blargh, .ugh)', doOtherStuff);
 	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(p|eq(3))', doOtherStuff); // BROKEN
 	// oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy, .abc, .bcd, .cde, .def, .efg, .fgh, .ghi, .hij, .ijk, .jkl, .klm, .lmn, .mno, .nop, .opq, .pqr, .qrs)', doOtherStuff);
+
 
 	runDemo('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy, .abc, .bcd, .cde, .def, .efg, .fgh, .ghi, .hij, .ijk, .jkl, .klm, .lmn, .mno, .nop, .opq, .pqr, .qrs)');
 	runDemo('a:first-of-type');
@@ -417,7 +381,7 @@ function playDemo() {
 	// });
 	// console.timeEnd('jquery');
 	
-}
+};
 
 document.addEventListener('DOMContentLoaded', function() {
 

@@ -231,6 +231,14 @@ oO.every = function(obj, fn, str) {
 	console.time('each: ' + str);
 
 	if (typeof fn != 'function') {
+		console.log(Array.isArray(obj));
+		if (Array.isArray(obj) === false) {
+			var arr = [];
+			arr.push(obj);			
+			obj = arr;
+		}
+
+		console.log(obj.length);
 		return obj;
 	} else if (typeof obj != 'undefined') {
 		if (obj.length && typeof obj[0] != null && typeof obj != 'undefined') {
@@ -316,12 +324,16 @@ function runDemo(target) {
 function playDemo() {
 
 	// console.log($('*').length);
-	console.log(oO('p'));
+	var aaa = oO('p|not(.ugh)');
+	aaa[0].style.color = 'red';
+	var bbb = oO('p|eq(2)');
+	bbb[0].style.color = 'red';
+	// console.log(killme[0]);
 	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
 	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
 	console.log($('*').length);
-	// oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)',doStuff);
-	// oO('a',doOtherStuff);
+	oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)',doStuff);
+	oO('a',doOtherStuff);
 	// oO('#boo, #urns, a|not(.foo, .inc, .dba), #blargh', doOtherStuff);
 	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(#blargh, .ugh)', doOtherStuff);
 	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(p|eq(3))', doOtherStuff); // BROKEN

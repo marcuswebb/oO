@@ -66,11 +66,18 @@ a:visited
 // app.times.end = 0;
 // var oO = {};
 
-var oO = function(str,fn) {
+var oO = function(str,fn,settings) {
 	// console.log(str);
+	if (typeof settings === 'undefined') {
+		var settings = {};
+	}
+	settings.string = str;
+	console.time('oO: ' + settings.string);
 	if (typeof fn === 'function') {
-		return oO.every(oO.select(str),fn,str);
+		console.timeEnd('oO: ' + settings.string);
+		return oO.every(oO.select(str),fn,settings);
 	} else {
+		console.timeEnd('oO: ' + settings.string);
 		return oO.every(oO.select(str));
 	}
 }
@@ -225,10 +232,9 @@ oO.select = function(str) {
 	// NO ERROR HANDLING IF NO MATCHING ELEMENTS FOUND
 };
 
-oO.every = function(obj, fn, str) {
+oO.every = function(obj, fn, settings) {
 
-	console.log(obj);
-	console.time('each: ' + str);
+	console.time('every: ' + settings.string);
 
 	if (typeof fn != 'function') {
 		if (Array.isArray(obj) === false) {
@@ -239,8 +245,6 @@ oO.every = function(obj, fn, str) {
 			arr.push(obj);			
 			obj = arr;
 		}
-
-		console.log(obj.length);
 		return obj;
 	} else if (typeof obj != 'undefined') {
 		if (obj.length && typeof obj[0] != null && typeof obj != 'undefined') {
@@ -249,16 +253,16 @@ oO.every = function(obj, fn, str) {
 
 					if (obj[i].length) {
 						// iterate through an array of selectors
-						oO.every(obj[i],fn,str);
+						oO.every(obj[i],fn,settings);
 					} else {
 						// execute the callback function for single selector
-						fn(obj[i], i);
+						fn(obj[i], i,settings);
 					} 
 
 				}
 			};	
 		} else if (obj.length === 0 && typeof obj[0] != null && typeof obj != 'undefined') {
-			fn(obj,0);
+			fn(obj,0,settings);
 		// } else if (typeof obj[0] != null) {
 		// 	console.log(obj);
 			// for (var p in obj) {
@@ -269,12 +273,12 @@ oO.every = function(obj, fn, str) {
 			// 	}
 			// }
 		} else {
-			fn(obj,0);
+			fn(obj,0,settings);
 		}
 	} else {
 		// console.log('array empty');
 	}
-	console.timeEnd('each: ' + str);
+	console.timeEnd('every: ' + settings.string);
 
 	// if (obj.length) for (var i = 0, ol = obj.length, v = obj[0]; i < ol && fn(v, i) !== false; v = obj[++i]);
 	// else for (var p in obj) if (fn(obj[p], p) === false) break;
@@ -283,7 +287,7 @@ oO.every = function(obj, fn, str) {
 };
 
 
-function doStuff(obj, index) {
+function doStuff(obj, index, settings) {
 	// console.log(obj);
 	if (typeof obj == 'object' && obj.length != 0) {
 		obj.style.color = 'orange';
@@ -291,7 +295,7 @@ function doStuff(obj, index) {
 		console.log('no obj');
 	}
 }
-function doOtherStuff(obj, index) {
+function doOtherStuff(obj, index, settings) {
 	if (typeof obj == 'object' && obj.length != 0) {
 		obj.style.color = 'blue';
 	} else {
@@ -299,10 +303,15 @@ function doOtherStuff(obj, index) {
 	}
 }
 
-function undoStuff(obj, index) {
+function undoStuff(obj, index, settings) {
 	obj.style.color = '';	
 }
 
+function doColor(obj, index, settings) {
+	// console.log(obj);
+	newColor = settings.color;
+	obj.style.color = newColor;
+}
 
 // ---------------------------------------------------------------------
 
@@ -325,28 +334,54 @@ function runDemo(target) {
 
 function playDemo() {
 
-	// Calling the oO('selector') object directly without a callback function will always return an array of elements. 
-	// Consider pros/cons of implementing functionality to return a single element object if only one is found.
-	// This is less simple than returning a single object if only one is found, but it errs on the side of consistent usage as oO() will always be an array.
+// Calling the oO('selector') object directly without a callback function will always return an array of elements. 
+// Consider pros/cons of implementing functionality to return a single element object if only one is found.
+// This is less simple than returning a single object if only one is found, but it errs on the side of consistent usage as oO() will always be an array.
 
 
-	var ccc = oO('body');
-	ccc[0].style.color = 'pink';
+	// var aaa = oO('p|not(.ugh)');
+	// aaa[0].style.color = 'red';
 
-	var ddd = oO('#blargh');
-	ddd[0].style.color = 'green';
+	// var ccc = oO('body');
+	// ccc[0].style.color = 'pink';
 
-	var aaa = oO('p|not(.ugh)');
-	aaa[0].style.color = 'red';
+	// var ddd = oO('#blargh');
+	// ddd[0].style.color = 'green';
 
-	var bbb = oO('p|eq(2)');
-	bbb[0].style.color = 'lime';
+// Elements previously assigned to variable can still be accessed if they are removed from the DOM after assignment. 
+
+
+	// var fff = oO('a');
+	// oO.every(fff, doOtherStuff);
+	var newParams = {};
+	newParams.color = 'gray';
+	oO('a', doColor, newParams);
+	// oO.every(fff, doColor, newParams);
+
+	// fff[0].style.color = 'purple'; // this throws a typeError
+
+// Interestingly the timing here affects whether or not the style property is modifying on the previously called element variable. 
+// At lower or no delay, the element either will not receive or receive & then lose the modification. 
+// At longer delays, the element will retain the change.
+
+	// var bbb = oO('p|eq(2)');
+
+	// var eee = oO('body');
+	// eee[0].innerHTML = 'ELEMENTS DELETED';
+
+	// bbb[0].style.color = 'lime';
+	// setTimeout(function() {
+		// eee[0].innerHTML = bbb[0].outerHTML;	
+	// }, 500); 
 
 
 	// console.log($('*').length);
 	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
 	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
 	// console.log($('*').length);
+
+
+
 	// oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)',doStuff);
 	// oO('a',doOtherStuff);
 	// oO('#boo, #urns, a|not(.foo, .inc, .dba), #blargh', doOtherStuff);
@@ -354,27 +389,27 @@ function playDemo() {
 	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(p|eq(3))', doOtherStuff); // BROKEN
 	// oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy, .abc, .bcd, .cde, .def, .efg, .fgh, .ghi, .hij, .ijk, .jkl, .klm, .lmn, .mno, .nop, .opq, .pqr, .qrs)', doOtherStuff);
 
-	// runDemo('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy, .abc, .bcd, .cde, .def, .efg, .fgh, .ghi, .hij, .ijk, .jkl, .klm, .lmn, .mno, .nop, .opq, .pqr, .qrs)');
-	// runDemo('a:first-of-type');
-	// runDemo('a:link:last-child');
-	// runDemo('p|eq(4)');
-	// runDemo('p:last-child');
-	// runDemo('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)');
-	// runDemo('p, a');
-	// runDemo('p, #boo, #urns, a|not(.foo, #bar), #blargh');
-	// runDemo('p|not(#blargh)');
-	// runDemo('#blargh');
-	// runDemo('p');
-	// runDemo('p:nth-of-type(2n)');
-	// runDemo('a');
-	// runDemo('a:link');
-	// runDemo('a:link, p');
-	// runDemo('#blargh, .ugh');
-	// runDemo('#blargh');
-	// runDemo('.ugh');
-	// runDemo('#buh');
-	// runDemo('h1');
-	// runDemo('*');
+	runDemo('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy, .abc, .bcd, .cde, .def, .efg, .fgh, .ghi, .hij, .ijk, .jkl, .klm, .lmn, .mno, .nop, .opq, .pqr, .qrs)');
+	runDemo('a:first-of-type');
+	runDemo('a:link:last-child');
+	runDemo('p|eq(4)');
+	runDemo('p:last-child');
+	runDemo('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)');
+	runDemo('p, a');
+	runDemo('p, #boo, #urns, a|not(.foo, #bar), #blargh');
+	runDemo('p|not(#blargh)');
+	runDemo('#blargh');
+	runDemo('p');
+	runDemo('p:nth-of-type(2n)');
+	runDemo('a');
+	runDemo('a:link');
+	runDemo('a:link, p');
+	runDemo('#blargh, .ugh');
+	runDemo('#blargh');
+	runDemo('.ugh');
+	runDemo('#buh');
+	runDemo('h1');
+	runDemo('*');
 
 	// console.time('jquery');
 	// $('*').each(function() {

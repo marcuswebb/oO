@@ -154,13 +154,13 @@ oO.select = function(str) {
 					var elem = str.substr(0,str.indexOf('|'));
 					var objs = document.querySelectorAll(elem);
 
-					// 2DO : try to remove arr from flow, seems extraneous
 					var arr = [];
 					for (var i = 0; i < objs.length; i++) {
 						arr.push(objs[i]);
 					};
+					objs = arr;
 					// 2DO verify that arr.length - 1 is correct vs. arr.length
-					for (var i = arr.length; i--;) {
+					for (var i = objs.length; i--;) {
 						for (var iiii = 0; iiii < filterSelectors.length; iiii++) {
 							var filter = filterSelectors[iiii];
 							var filterType = filter.substr(0,1);
@@ -168,13 +168,13 @@ oO.select = function(str) {
 								case '.':
 									filterText = filter.substr(1);
 									if (objs[i].className.indexOf(filterText) > -1) {
-										arr.splice(i,1);
+										objs.splice(i,1);
 									};
 								break;
 								case '#':
 									filterText = filter.substr(1);
 									if (objs[i].id.indexOf(filterText) > -1) {
-										arr.splice(i,1);
+										objs.splice(i,1);
 									};
 								break;
 								default:
@@ -182,7 +182,7 @@ oO.select = function(str) {
 							};
 						};
 					};
-					return arr;
+					return objs;
 				break;
 			};
 		} else {

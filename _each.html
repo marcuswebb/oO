@@ -95,14 +95,14 @@ oO.select = function(str) {
 		function regThis() {
 			if (regMatch != null) {
 				var item = m.substr(0,regMatch.index);
-				arr[iii] = item;
-				iii++;
+				arr[ii] = item;
+				ii++;
 				m = m.substr(regMatch.index+1);
 				regMatch = re.exec(m);
 				if (regMatch != null) {
 					regThis();
 				} else {
-					arr[iii] = m;
+					arr[ii] = m;
 					for (var i = 0; i < arr.length; i++) {
 						if (typeof oO.select(arr[i]) != 'undefined') {
 							arr[i] = result(arr[i]);
@@ -115,11 +115,11 @@ oO.select = function(str) {
 		};
 		if (regMatch != null) {
 			var arr = [];
-			var iii = 0;
+			var ii = 0;
 			regThis();
 			return arr;
 		} else {	
-			// iterate through a comma separated list of selectors & return each array item recursively to the function 
+			// iterates through a comma separated list of selectors & parses each array item recursively to this function 
 			var arr = str.split(',');
 			for (var i = 0; i < arr.length; i++) {
 				arr[i] = oO.select(arr[i]);
@@ -158,11 +158,13 @@ oO.select = function(str) {
 					for (var i = 0; i < objs.length; i++) {
 						arr.push(objs[i]);
 					};
+					objs = new Array();
 					objs = arr;
-					// 2DO verify that arr.length - 1 is correct vs. arr.length
+
+					// 2DO verify that objs.length - 1 is correct vs. objs.length
 					for (var i = objs.length; i--;) {
-						for (var iiii = 0; iiii < filterSelectors.length; iiii++) {
-							var filter = filterSelectors[iiii];
+						for (var ii = 0; ii < filterSelectors.length; ii++) {
+							var filter = filterSelectors[ii];
 							var filterType = filter.substr(0,1);
 							switch(filterType) {
 								case '.':

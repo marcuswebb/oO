@@ -231,8 +231,10 @@ oO.every = function(obj, fn, str) {
 	console.time('each: ' + str);
 
 	if (typeof fn != 'function') {
-		console.log(Array.isArray(obj));
 		if (Array.isArray(obj) === false) {
+			if (obj.length === 1) {
+				obj = obj[0];
+			}
 			var arr = [];
 			arr.push(obj);			
 			obj = arr;
@@ -323,17 +325,30 @@ function runDemo(target) {
 
 function playDemo() {
 
-	// console.log($('*').length);
+	// Calling the oO('selector') object directly without a callback function will always return an array of elements. 
+	// Consider pros/cons of implementing functionality to return a single element object if only one is found.
+	// This is less simple than returning a single object if only one is found, but it errs on the side of consistent usage as oO() will always be an array.
+
+
+	var ccc = oO('body');
+	ccc[0].style.color = 'pink';
+
+	var ddd = oO('#blargh');
+	ddd[0].style.color = 'green';
+
 	var aaa = oO('p|not(.ugh)');
 	aaa[0].style.color = 'red';
+
 	var bbb = oO('p|eq(2)');
-	bbb[0].style.color = 'red';
-	// console.log(killme[0]);
+	bbb[0].style.color = 'lime';
+
+
+	// console.log($('*').length);
 	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
 	// $('body').append($('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html() + $('body').html());
-	console.log($('*').length);
-	oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)',doStuff);
-	oO('a',doOtherStuff);
+	// console.log($('*').length);
+	// oO('a|not(.foo, #bar, .xyz, .zyx, .inc, .dba, #xxx, #yyy)',doStuff);
+	// oO('a',doOtherStuff);
 	// oO('#boo, #urns, a|not(.foo, .inc, .dba), #blargh', doOtherStuff);
 	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(#blargh, .ugh)', doOtherStuff);
 	// oO('a|not(.foo, .inc, .dba, #xxx), p|not(p|eq(3))', doOtherStuff); // BROKEN
